@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
-import { GenerateChallengeDto } from './generate-challenge.dto';
+import { GenerateChallengeDto } from '../dtos/generate-challenge.dto';
 
 @Injectable()
 export class ChallengesService {

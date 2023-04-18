@@ -1,19 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { Configuration, OpenAIApi } from 'openai';
+import { Inject, Injectable } from '@nestjs/common';
+import { OpenAIApi } from 'openai';
 import { GenerateChallengeDto } from '../dtos/generate-challenge.dto';
 
 @Injectable()
 export class ChallengesService {
+  constructor(@Inject('OpenAIApi') private readonly openAIApi: OpenAIApi) {}
+
   async generateChallenge({
     language,
     level,
   }: GenerateChallengeDto): Promise<string> {
-    const configuration = new Configuration({
-      apiKey: process.env.OPEN_AI_API_KEY,
-    });
-
-    const openai = new OpenAIApi(configuration);
-
     const prompt = `
       Gerar 1 desafio de desenvolvimento na linguagem ${language}.
       O desafio deve conter os atributos necessários com detalhes e
@@ -25,10 +21,10 @@ export class ChallengesService {
       dos problemas junto com o desafio.
     `;
 
-    const completion = await openai.createCompletion({
+    const completion = await this.openAIApi.createCompletion({
       prompt,
       model: 'text-davinci-003',
-      temperature: 0.7,
+      temperature: 0.8,
       max_tokens: 500,
       top_p: 1,
     });

@@ -27,4 +27,6 @@ steps:
     repository: 'challenge-generator'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags: latest
+    tags: |
+      $(Build.BuildId)
+      latest

@@ -27,5 +27,4 @@ steps:
     repository: '.'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags:
-      latest
+    tags: latest

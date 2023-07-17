@@ -24,7 +24,7 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'container-registry-celula'
-    repository: 'challenge-generator/'
+    repository: 'challenge-generator'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     tags: latest

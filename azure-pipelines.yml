@@ -30,3 +30,39 @@ steps:
     tags: |
       $(Build.BuildId)
       latest
+  
+- stage: DeployKubernetes
+jobs:
+  - job: ApplyManifests
+    displayName: Applying kubernetes manifests
+    steps:
+      - task: KubernetesManifest@0
+        displayName: Deploy to Kubernetes
+        inputs:
+          action: deploy
+          namespace: challenge-generator
+          kubernetesServiceConnection: AKS-DB
+          manifests: |
+            ./kubernetes/deployment.yaml
+            ./kubernetes/service.yaml
+          containers: |
+            $(acrUrl):latest
+      - task: Kubernetes@1
+        displayName: Apply Ingress
+        inputs:
+          connectionType: Kubernetes Service Connection
+          kubernetesServiceEndpoint: AKS-DB
+          namespace: challenge-generator
+          command: 'apply'
+          useConfigurationFile: true
+          configuration: './kubernetes/ingress.yaml'
+          outputFormat: none
+      
+      - task: Kubernetes@1
+        displayName: Restart service
+        inputs:
+          connectionType: Kubernetes Service Connection
+          kubernetesServiceEndpoint: AKS-DB
+          namespace: challenge-generator
+          command: "rollout"
+          arguments: "restart deploy challenge-generator"

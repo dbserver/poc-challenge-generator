@@ -18,21 +18,21 @@ spec:
           image: "celula.azurecr.io/challenge-generator"
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
           envFrom:
             - secretRef:
                 name: challenge-generator-secrets
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 3000
             initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 10
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              port: 8080
+              port: 3000
               path: /health
             initialDelaySeconds: 60
             periodSeconds: 10

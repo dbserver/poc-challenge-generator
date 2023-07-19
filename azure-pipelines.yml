@@ -20,30 +20,30 @@ variables:
     value: 'AKS-DB'
 
 stages:
-    - stage: CI
-      jobs:
-        - job: CI
-          displayName: "Install, build and build&push docker"
-          steps:
-            - task: Npm@1
-              inputs:
-                command: install
-              displayName: "npm install"
+    # - stage: CI
+    #   jobs:
+    #     - job: CI
+    #       displayName: "Install, build and build&push docker"
+    #       steps:
+    #         - task: Npm@1
+    #           inputs:
+    #             command: install
+    #           displayName: "npm install"
               
-            - task: Npm@1
-              inputs:
-                customCommand: run build
-              displayName: "run build"
+    #         - task: Npm@1
+    #           inputs:
+    #             customCommand: run build
+    #           displayName: "run build"
 
-            - task: Docker@2
-              inputs:
-                containerRegistry: 'container-registry-celula'
-                repository: 'challenge-generator'
-                command: 'buildAndPush'
-                Dockerfile: '**/Dockerfile'
-                tags: |
-                  $(Build.BuildId)
-                  latest
+    #         - task: Docker@2
+    #           inputs:
+    #             containerRegistry: 'container-registry-celula'
+    #             repository: 'challenge-generator'
+    #             command: 'buildAndPush'
+    #             Dockerfile: '**/Dockerfile'
+    #             tags: |
+    #               $(Build.BuildId)
+    #               latest
 
     - stage: DeployAKS 
       variables:

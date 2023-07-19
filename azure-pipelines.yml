@@ -19,69 +19,70 @@ variables:
   - name: aksServiceConnection
     value: 'AKS-DB'
 
-steps:
-  jobs:
-    - job: CI
-      displayName: "Install, build and build&push docker"
-      - task: Npm@1
-        inputs:
-          command: install
-        displayName: "npm install"
-        
-      - task: Npm@1
-        inputs:
-          customCommand: run build
-        displayName: "run build"
+stages:
+    # - stage: CI
+    #   jobs:
+    #     - job: CI
+    #       displayName: "Install, build and build&push docker"
+    #       steps:
+    #         - task: Npm@1
+    #           inputs:
+    #             command: install
+    #           displayName: "npm install"
+              
+    #         - task: Npm@1
+    #           inputs:
+    #             customCommand: run build
+    #           displayName: "run build"
 
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'container-registry-celula'
-          repository: 'challenge-generator'
-          command: 'buildAndPush'
-          Dockerfile: '**/Dockerfile'
-          tags: |
-            $(Build.BuildId)
-            latest
+    #         - task: Docker@2
+    #           inputs:
+    #             containerRegistry: 'container-registry-celula'
+    #             repository: 'challenge-generator'
+    #             command: 'buildAndPush'
+    #             Dockerfile: '**/Dockerfile'
+    #             tags: |
+    #               $(Build.BuildId)
+    #               latest
 
-- stage: DeployAKS 
-variables:
-- group:  challenge-generator-secrets
-jobs:
-- job: ApplyManifests
-displayName: Applying kubernetes manifests
-steps:
-- task: Kubernetes@1
-displayName: Create secret
-inputs:
-  connectionType: $(connectionType)
-  kubernetesServiceEndpoint: $(aksServiceConnection)
-  namespace: $(k8sNamespace)
-  containerRegistryType: "Azure Container Registry"
-  secretName:  " challenge-generator-secrets"
-  secretType: generic
-  secretArguments:  >
+    - stage: DeployAKS 
+      variables:
+      - group:  challenge-generator-env
+      jobs:
+        - job: ApplyManifests
+          displayName: Applying kubernetes manifests
+          steps:
+            - task: Kubernetes@1
+              displayName: Create secret
+              inputs:
+                connectionType: $(connectionType)
+                kubernetesServiceEndpoint: $(aksServiceConnection)
+                namespace: $(k8sNamespace)
+                containerRegistryType: "Azure Container Registry"
+                secretName:  " challenge-generator-secrets"
+                secretType: generic
+                secretArguments:  >
+                     --from-literal=OPEN_AI_API_KEY=$(OPEN_AI_API_KEY)
 
+            - task: KubernetesManifest@0
+              displayName: Deploy to Kubernetes
+              inputs:
+                action: deploy
+                namespace: $(k8sNamespace)
+                kubernetesServiceConnection: $(aksServiceConnection)
+                manifests: |
+                  ./kubernetes/deployment.yml
+                  ./kubernetes/service.yml
+                containers: |
+                  $(acrUrl):latest
 
-- task: KubernetesManifest@0
-displayName: Deploy to Kubernetes
-inputs:
-  action: deploy
-  namespace: $(k8sNamespace)
-  kubernetesServiceConnection: $(aksServiceConnection)
-  manifests: |
-    ./kubernetes/deployment.yaml
-    ./kubernetes/service.yaml
-  containers: |
-    $(acrUrl):latest
-
-    
-- task: Kubernetes@1
-displayName: Apply Ingress
-inputs:
-  connectionType: $(connectionType)
-  kubernetesServiceEndpoint: $(aksServiceConnection)
-  namespace: $(k8sNamespace)
-  command: 'apply'
-  useConfigurationFile: true
-  configuration: './kubernetes/ingress.yaml'
-  outputFormat: none
+            - task: Kubernetes@1
+              displayName: Apply Ingress
+              inputs:
+                connectionType: $(connectionType)
+                kubernetesServiceEndpoint: $(aksServiceConnection)
+                namespace: $(k8sNamespace)
+                command: 'apply'
+                useConfigurationFile: true
+                configuration: './kubernetes/ingress.yml'
+                outputFormat: none

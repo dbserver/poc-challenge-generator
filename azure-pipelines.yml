@@ -73,8 +73,7 @@ stages:
                 manifests: |
                   ./kubernetes/deployment.yml
                   ./kubernetes/service.yml
-                containers: |
-                  celula.azurecr.io/challenge-generator:latest
+                containers: celula.azurecr.io/challenge-generator:latest
 
             - task: Kubernetes@1
               displayName: Apply Ingress

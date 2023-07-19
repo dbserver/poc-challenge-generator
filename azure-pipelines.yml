@@ -47,7 +47,7 @@ stages:
 
     - stage: DeployAKS 
       variables:
-      - group:  challenge-generator-secrets
+      - group:  challenge-generator-env
       jobs:
         - job: ApplyManifests
           displayName: Applying kubernetes manifests

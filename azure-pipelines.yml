@@ -71,8 +71,8 @@ stages:
                 namespace: $(k8sNamespace)
                 kubernetesServiceConnection: $(aksServiceConnection)
                 manifests: |
-                  ./kubernetes/deployment.yaml
-                  ./kubernetes/service.yaml
+                  ./kubernetes/deployment.yml
+                  ./kubernetes/service.yml
                 containers: |
                   $(acrUrl):latest
 
@@ -84,5 +84,5 @@ stages:
                 namespace: $(k8sNamespace)
                 command: 'apply'
                 useConfigurationFile: true
-                configuration: './kubernetes/ingress.yaml'
+                configuration: './kubernetes/ingress.yml'
                 outputFormat: none

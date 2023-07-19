@@ -74,7 +74,7 @@ stages:
                   ./kubernetes/deployment.yml
                   ./kubernetes/service.yml
                 containers: |
-                  $(acrUrl):latest
+                  celula.azurecr.io/challenge-generator:latest
 
             - task: Kubernetes@1
               displayName: Apply Ingress

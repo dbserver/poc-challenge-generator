@@ -16,7 +16,7 @@ items:
                 path: /
                 backend:
                   service:
-                    name: challenge-generator
+                    name: challenge-generator-service
                     port:
                       number: 80
       tls:

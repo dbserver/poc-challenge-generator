@@ -28,11 +28,13 @@ stages:
             - task: Npm@1
               inputs:
                 command: install
+                workingDir: ./
               displayName: "npm install"
               
             - task: Npm@1
               inputs:
                 customCommand: run build
+                workingDir: ./
               displayName: "run build"
 
             - task: Docker@2

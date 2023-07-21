@@ -64,7 +64,7 @@ stages:
                 secretName:  "challenge-generator-secrets"
                 secretType: generic
                 secretArguments: >
-                      --from-literal=OPEN_AI_API_KEY=$(OPEN_AI_API_KEY)
+                      --from-literal=OPEN_AI_API_KEY=$(KeyChallengeGenerator)
 
             - task: KubernetesManifest@0
               displayName: Deploy to Kubernetes

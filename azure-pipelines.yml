@@ -25,28 +25,28 @@ stages:
         - job: CI
           displayName: "Install, build and build&push docker"
           steps:
-            - task: Npm@1
-              inputs:
-                command: install
-                workingDir: ./
-              displayName: "npm install"
+            # - task: Npm@1
+            #   inputs:
+            #     command: install
+            #     workingDir: ./
+            #   displayName: "npm install"
               
-            - task: Npm@1
-              inputs:
-                command: custom
-                workingDir: ./
-                customCommand: "run build"
-              displayName: "run build"
+            # - task: Npm@1
+            #   inputs:
+            #     command: custom
+            #     workingDir: ./
+            #     customCommand: "run build"
+            #   displayName: "run build"
 
-            - task: Docker@2
-              inputs:
-                containerRegistry: 'container-registry-celula'
-                repository: 'challenge-generator'
-                command: 'buildAndPush'
-                Dockerfile: '**/Dockerfile'
-                tags: |
-                  $(Build.BuildId)
-                  latest
+            # - task: Docker@2
+            #   inputs:
+            #     containerRegistry: 'container-registry-celula'
+            #     repository: 'challenge-generator'
+            #     command: 'buildAndPush'
+            #     Dockerfile: '**/Dockerfile'
+            #     tags: |
+            #       $(Build.BuildId)
+            #       latest
 
     - stage: DeployAKS 
       variables:
@@ -54,17 +54,17 @@ stages:
       jobs:
         - job: ApplyManifests
           steps:
-            # - task: Kubernetes@1
-            #   displayName: Create secret
-            #   inputs:
-            #     connectionType: $(connectionType)
-            #     kubernetesServiceEndpoint: $(aksServiceConnection)
-            #     namespace: $(k8sNamespace)
-            #     containerRegistryType: "Azure Container Registry"
-            #     secretName:  "challenge-generator-secrets"
-            #     secretType: generic
-            #     secretArguments: >
-            #           --from-literal=OPEN_AI_API_KEY=$(OPEN_AI_API_KEY)
+            - task: Kubernetes@1
+              displayName: Create secret
+              inputs:
+                connectionType: $(connectionType)
+                kubernetesServiceEndpoint: $(aksServiceConnection)
+                namespace: $(k8sNamespace)
+                containerRegistryType: "Azure Container Registry"
+                secretName:  "challenge-generator-secrets"
+                secretType: generic
+                secretArguments: >
+                      --from-literal=OPEN_AI_API_KEY=$(OPEN_AI_API_KEY)
 
             - task: KubernetesManifest@0
               displayName: Deploy to Kubernetes

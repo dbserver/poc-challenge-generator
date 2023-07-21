@@ -20,11 +20,11 @@ variables:
     value: 'AKS-DB'
 
 stages:
-    - stage: CI
-      jobs:
-        - job: CI
-          displayName: "Install, build and build&push docker"
-          steps:
+    # - stage: CI
+    #   jobs:
+    #     - job: CI
+    #       displayName: "Install, build and build&push docker"
+    #       steps:
             # - task: Npm@1
             #   inputs:
             #     command: install

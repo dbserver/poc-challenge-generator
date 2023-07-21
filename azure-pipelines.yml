@@ -53,7 +53,6 @@ stages:
       - group: challenge-generator-env
       jobs:
         - job: ApplyManifests
-          displayName: Applying kubernetes manifests
           steps:
             - task: Kubernetes@1
               displayName: Create secret
@@ -64,7 +63,8 @@ stages:
                 containerRegistryType: "Azure Container Registry"
                 secretName:  "challenge-generator-secrets"
                 secretType: generic
-                secretArguments: --from-literal=OPEN_AI_API_KEY=$(OPEN_AI_API_KEY)
+                secretArguments: >
+                      --from-literal=OPEN_AI_API_KEY=$(OPEN_AI_API_KEY)
 
             - task: KubernetesManifest@0
               displayName: Deploy to Kubernetes

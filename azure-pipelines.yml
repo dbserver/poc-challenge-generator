@@ -33,8 +33,9 @@ stages:
               
             - task: Npm@1
               inputs:
-                customCommand: run build
+                command: custom
                 workingDir: ./
+                customCommand: "run build"
               displayName: "run build"
 
             - task: Docker@2

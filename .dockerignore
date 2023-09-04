@@ -1,0 +1,11 @@
+# compiled output
+./src
+./test
+./kubernetes
+# files
+.env
+.env.example
+.gitignore
+azure-pipelines.yml
+Dockerfile
+README.md
